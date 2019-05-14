@@ -1,0 +1,10 @@
+node_modules
+lib/
+es/
+umd/
+ts/
+dist/
+coverage/
+.idea
+.vscode
+*.log
