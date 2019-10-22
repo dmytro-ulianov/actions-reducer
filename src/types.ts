@@ -1,4 +1,4 @@
-export type ActionType = string | symbol
+export type ActionType = string
 
 export type FSA<P = undefined, M = undefined> = P extends undefined
   ? (M extends undefined ? {type: ActionType} : {type: ActionType; meta: M})
@@ -12,10 +12,11 @@ export type FSA<P = undefined, M = undefined> = P extends undefined
 
 export type Typed = {getType: () => string}
 
-export type ActionCreator<P = undefined, M = undefined> = ((
-  payload?: P,
-  meta?: M,
-) => FSA<P, M>) &
+export type ActionCreator<P = undefined, M = undefined> = (P extends undefined
+  ? () => FSA
+  : (M extends undefined
+      ? (payload: P) => FSA<P>
+      : (payload: P, meta: M) => FSA<P, M>)) &
   Typed
 
 export type Reducer<S, A extends FSA<any, any> = FSA<any, any>> = (

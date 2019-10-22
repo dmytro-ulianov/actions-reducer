@@ -6,11 +6,48 @@
 
 ## Usage
 
+```ts
+import {createAction, createReducer} from '@featherweight/actions-reducer'
+
+/* Define your actions */
+const increment = createAction('counter: increment')
+const add = createAction<number>('counter: add')
+
+/* Create reducer */
+const initialCounter = 0
+const reducer = createReducer(
+  on => [
+    on(increment, state => state + 1),
+    on(add, ((state, action) = state + action.payload)),
+  ],
+  initialCounter,
+)
+
+/* All set, you can use reducer */
+const reduxStore = createStore(reducer)
+
+/* Also you can define your handlers outside of reducer using HandlerOf type */
+const decrement = createAction('counter: decrement')
+const decrementHandler: HandlerOf<
+  typeof initialState,
+  typeof decrement
+> = state => state - 1
+
+/* And you can attach handlers to your reducer dynamically */
+reducer.on(decrement, decrementHandler)
+
+/* It supports meta and error fields as well */
+const allInOne = createAction<string | Error, {flag: boolean}>('all in one')
+allInOne(new Error('nope'), {flag: true})
+```
+
+## API
+
 ### `action`
 
 Flux Standard Action compatible action.
 
-#### `<P, M>(type: ActionType, payload: P, meta: M) => FSA<P, M>`
+##### `<P, M>(type: ActionType, payload: P, meta: M) => FSA<P, M>`
 
 ```ts
 import {action} from '@featherweight/actions-reducer'
@@ -29,7 +66,7 @@ action('with meta', 42, {hi: 'there'})
 
 Action creator factory.
 
-#### `<P, M>(type: ActionType) => (payload?: P, meta?: M) => FSA<P, M>`
+##### `<P, M>(type: ActionType) => (payload?: P, meta?: M) => FSA<P, M>`
 
 ```ts
 import {createAction} from '@featherweight/actions-reducer'
@@ -51,7 +88,7 @@ fetchUser('user-id', {ts: new Date()})
 
 Reducer creator with type inference.
 
-#### `<S>(createHandlers: (on: Handler<S>) => HandlerTuple<S>[], initialState?: S) => Reducer`
+##### `<S>(createHandlers: (on: Handler<S>) => HandlerTuple<S>[], initialState?: S) => Reducer`
 
 ```ts
 import {createAction, createReducer} from '@featherweight/actions-reducer'
@@ -87,9 +124,9 @@ const reducer = createReducer<State>(on => [
 
 ### `createReducerWithState`
 
-The same as `createReducer` but you can attach handlers dynamically.
+The same as `createReducer` but you can only attach handlers dynamically.
 
-#### `<S>(initialState?: S) => Reducer & {on: Handler<S>}`
+##### `<S>(initialState?: S) => Reducer & {on: Handler<S>}`
 
 ```ts
 import {
@@ -149,6 +186,8 @@ function* rootSaga() {
   yield takeLatest(fetchUser, fetchUserSaga)
 }
 function* fetchUserSaga(action: ActionOf<typeof fetchUser>) {
+  action.payload.id // string
+  action.paylaod.search // Record<string, string>
   /* ... */
 }
 ```
