@@ -9,7 +9,7 @@ export function createAction<P, M>(type: ActionType): ActionCreator<P, M>
 
 export function createAction<P = undefined, M = undefined>(type: ActionType) {
   const actionCreator = (payload?: P, meta?: M) => action(type, payload, meta)
-  const getType = () => type.toString()
+  const getType = () => type
   actionCreator.getType = getType
   actionCreator.toString = getType
   return actionCreator

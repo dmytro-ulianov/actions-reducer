@@ -20,7 +20,7 @@ export function createReducer<S = undefined>(
 ) {
   const actionHandlersMap = createHandlers(on).reduce(
     (actionMap, [actionType, actionHandler]) => {
-      actionMap[actionType as string] = actionHandler
+      actionMap[actionType] = actionHandler
       return actionMap
     },
     {} as Handlers<S>,
@@ -31,7 +31,7 @@ export function createReducer<S = undefined>(
     action?: Action,
   ) => {
     if (action) {
-      const handler = action && actionHandlersMap[action.type as string]
+      const handler = action && actionHandlersMap[action.type]
       return handler ? handler(state, action) : state
     }
     return state
@@ -42,7 +42,7 @@ export function createReducer<S = undefined>(
     handleAction: Reducer<S, FSA<P, M>>,
   ) => {
     const [type, handler] = on(action, handleAction)
-    actionHandlersMap[type as string] = handler
+    actionHandlersMap[type] = handler
     return reducer
   }
 
@@ -57,7 +57,7 @@ export function createReducerWithState<S>(initialState?: S) {
     action?: Action,
   ) => {
     if (action) {
-      const handler = action && actionMap[action.type.toString()]
+      const handler = action && actionMap[action.type]
       return handler ? handler(state, action) : state
     }
     return state
@@ -68,7 +68,7 @@ export function createReducerWithState<S>(initialState?: S) {
     handleAction: Reducer<S, FSA<P, M>>,
   ) => {
     const [type, handler] = on(action, handleAction)
-    actionMap[type as string] = handler
+    actionMap[type] = handler
     return reducer
   }
 

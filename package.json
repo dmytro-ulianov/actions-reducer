@@ -1,7 +1,7 @@
 {
   "name": "@featherweight/actions-reducer",
   "description": "Minimalistic typesafe actions and reducers",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "keywords": [
     "action-creator",
     "action",
